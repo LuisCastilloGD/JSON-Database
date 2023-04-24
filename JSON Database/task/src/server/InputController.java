@@ -1,21 +1,31 @@
 package server;
 
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.util.Scanner;
 
 public class InputController {
-    CellDataBase cellDataBase;
-    InputController(){
-        this.cellDataBase = new CellDataBase();
+
+    RequestController requestController;
+
+    InputController() {
+        this.requestController = new RequestController();
+
     }
-    protected void inputMenu(){
+
+    @Deprecated
+    protected void inputMenu() {
         final Scanner scanner = new Scanner(System.in);
         boolean active = true;
         while (active) {
             final String input = scanner.next();
             switch (input) {
-                case "set" -> set(scanner.nextInt(),scanner.nextLine());
-                case "get" -> get(scanner.nextInt());
-                case "delete" -> delete(scanner.nextInt());
+                case "set" -> requestController.update(scanner.next(), scanner.nextLine());
+                case "get" -> requestController.read(scanner.next());
+                case "delete" -> requestController.delete(scanner.next());
                 case "exit" -> active = false;
                 default -> {
                     System.out.println("ERROR\n");
@@ -24,14 +34,34 @@ public class InputController {
         }
     }
 
-    public String get(int index){
-        return cellDataBase.getCellByIndex(index-1);
-    }
-    protected void set(int index, String value){
-        this.cellDataBase.setCellByIndex(index-1,value);
-    }
-    protected void delete(int index){
-        this.cellDataBase.deleteCellByIndex(index-1);
+    protected String inputRequest(String request) {
+
+        JsonObject jsonObject = new JsonParser().parse(request).getAsJsonObject();
+        String typeRequest = jsonObject.get("type").getAsString();
+
+        if (typeRequest.equals("exit"))
+            return "{\"response\" : \"OK\"}";
+
+        String key = jsonObject.get("key").getAsString();
+
+        switch (typeRequest) {
+            case "set" -> {
+                String value = jsonObject.get("value").getAsString();
+                return requestController.update(key, value);
+            }
+            case "get" -> {
+                return requestController.read(key);
+            }
+            case "delete" -> {
+
+                return requestController.delete(key);
+            }
+            default -> {
+                return "ERROR";
+            }
+        }
+
+
     }
 
 
