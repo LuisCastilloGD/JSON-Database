@@ -1,7 +1,7 @@
 <h2>Thread management</h2>
-<html><body><p>We've already learned how to start a new thread by simply invoking the <code class="language-java">start</code> method on a corresponding object. However, sometimes it is necessary to manage the lifecycle of a thread while it's working rather than just start it and leave it be.</p>
+<p>We've already learned how to start a new thread by simply invoking the <code class="language-java">start</code> method on a corresponding object. However, sometimes it is necessary to manage the lifecycle of a thread while it's working rather than just start it and leave it be.</p>
 <p>In this topic we will consider two commonly used methods in multithreading programming: <code class="language-java">sleep()</code> and <code class="language-java">join()</code>. Both methods may throw a checked <code class="language-java">InterruptedException</code> that is omitted here for brevity.</p>
-<h5 id="sleeping" style="text-align: center;">Sleeping</h5>
+<h5 id="sleeping">Sleeping</h5>
 <p>The static method <code class="language-java">Thread.sleep()</code> causes the currently executing thread to suspend execution for the specified number of milliseconds. This is an efficient means of making processor time available for the other threads of an application or other applications that might be running on a computer.</p>
 <p>We will often use this method throughout our educational platform to simulate expensive calls and difficult tasks.</p>
 <pre><code class="language-java">System.out.println("Started");
@@ -16,8 +16,8 @@ System.out.println("Finished");</code></pre>
 <li><code class="language-java">TimeUnit.SECONDS.sleep(2)</code> performs <code class="language-java">Thread.sleep</code> for 2 seconds;</li>
 </ul>
 <p>There are more existing periods: <code class="language-java">NANOSECONDS</code>, <code class="language-java">MICROSECONDS</code>, <code class="language-java">MILLISECONDS</code>, <code class="language-java">SECONDS</code>, <code class="language-java">MINUTES</code>, <code class="language-java">HOURS</code>, <code class="language-java">DAYS</code>.</p>
-<h5 id="joining" style="text-align: center;">Joining</h5>
-<p>The <code class="language-java">join</code> method forces the current thread to wait for the completion of another thread on which the method was called. In the following example, the string <strong>"Do something else"</strong> will not be printed until the thread terminates.</p>
+<h5 id="joining">Joining</h5>
+<p>The <code class="language-java">join</code> method forces the current thread to wait for the completion of the thread for which the method <code class="language-java">join</code> was called. In the following example, the string <strong>"Do something else"</strong> will not be printed until the thread terminates.</p>
 <pre><code class="language-java">Thread thread = ...
 thread.start(); // start thread
 
@@ -29,7 +29,7 @@ System.out.println("Do something else");</code></pre>
 <p>The overloaded version of this method takes a waiting time in milliseconds:</p>
 <pre><code class="language-java">thread.join(2000L);</code></pre>
 <p>This is used to avoid waiting for too long or even infinitely in case the thread is hung.</p>
-<p>Let's consider another example. The <code class="language-java">Worker</code> class is developed to solve "a difficult task" simulated by the sleep:</p>
+<p>Let's consider another example. The <code class="language-java">Worker</code> class is developed to solve "a difficult task" simulated by sleep:</p>
 <pre><code class="language-java">class Worker extends Thread {
     
     @Override
@@ -43,7 +43,7 @@ System.out.println("Do something else");</code></pre>
     }
 }</code></pre>
 <p> </p>
-<p>Here is the <code class="language-java">main</code> method where the <strong>main</strong> thread waits for completion of the <code class="language-java">worker</code>.</p>
+<p>Here is the <code class="language-java">main</code> method where the <strong>main</strong> thread waits for the completion of the <code class="language-java">worker</code>.</p>
 <pre><code class="language-java">public class JoiningExample {
     public static void main(String[] args) throws InterruptedException {
         Thread worker = new Worker();
@@ -76,4 +76,4 @@ The task is finished</code></pre>
 <pre><code class="language-java">Starting a task
 Do something useful
 The program stopped
-The task is finished</code></pre></body></html>
+The task is finished</code></pre>
