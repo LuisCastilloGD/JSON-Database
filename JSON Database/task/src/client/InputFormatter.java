@@ -2,58 +2,46 @@ package client;
 
 import com.google.gson.Gson;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.*;
 
 public class InputFormatter {
-    private final Args args;
-    InputFormatter(Args args){
-        this.args = args;
-    }
+    private static final String PATH_TO_FILE = "src/client/data/";
 
-    public List<String> inputToJson(){
+    public static List<String> getMessages(Args args) {
         Gson gson = new Gson();
-        if(this.args.getInputFileName()!=null)
-            return inputInFile(this.args.getInputFileName());
-        if(this.args.getTypeRequest().equals("exit")){
+        if (args.getInputFileName() != null)
+            return inputInFile(args);
+        if (args.getTypeRequest().equals("exit")) {
             return Collections.singletonList(gson.toJson(Map.of("type", "exit")));
-        }else{
-            return Collections.singletonList(gson.toJson(getParameters()));
+        } else {
+            return Collections.singletonList(gson.toJson(getParameters(args)));
         }
     }
 
-
-    public List<String> inputInFile(String fileName){
-        Gson gson = new Gson();
-        if (this.args.getInputFileName()!=null){
-            try {
-                File inputFile = new File("src/client/data/"+fileName);
+    private static List<String> inputInFile(Args args) {
+        if (args.getInputFileName() != null) {
+            try (BufferedReader inputFile = new BufferedReader(new FileReader(PATH_TO_FILE + args.getInputFileName()))) {
                 List<String> msgJson = new ArrayList<>();
-                final Scanner myReader = new Scanner(inputFile);
-                while (myReader.hasNextLine()) {
-                    String data = myReader.nextLine();
-
-                    msgJson.add(data);
+                String line;
+                while ((line = inputFile.readLine()) != null) {
+                    msgJson.add(line);
                 }
-                myReader.close();
                 return msgJson;
-
-            }catch(Exception e){
-                System.out.println("Something went wrong");
+            } catch (Exception e) {
+                System.out.println("Error in input File");
             }
         }
         return null;
     }
 
-    private Map<String, String> getParameters(){
+    private static Map<String, String> getParameters(Args args) {
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("type", this.args.getTypeRequest());
-        parameters.put("key", this.args.getKey());
-        if (this.args.getTypeRequest().equals("set"))
-            parameters.put("value", this.args.getValue());
+        parameters.put("type", args.getTypeRequest());
+        parameters.put("key", args.getKey());
+        if (args.getTypeRequest().equals("set"))
+            parameters.put("value", args.getValue());
         return parameters;
     }
-
-
 }

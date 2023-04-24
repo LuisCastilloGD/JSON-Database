@@ -1,23 +1,19 @@
-package server;
+package server.database;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class ReadAndWriteLockController {
+final public class ReadAndWriteLockController {
     private static final ReadAndWriteLockController INSTANCE = new ReadAndWriteLockController();
     private final ReadWriteLock lock;
-    private Lock readLock ;
-    private Lock writeLock ;
+    private Lock readLock;
+    private Lock writeLock;
 
     public ReadAndWriteLockController() {
         this.lock = new ReentrantReadWriteLock();
-        this.readLock= lock.readLock();
+        this.readLock = lock.readLock();
         this.writeLock = lock.writeLock();
-    }
-
-    public ReadWriteLock getLock() {
-        return lock;
     }
 
     public Lock getReadLock() {
@@ -28,14 +24,8 @@ public class ReadAndWriteLockController {
         return writeLock;
     }
 
-    public void setReadLock(Lock readLock) {
-        this.readLock = readLock;
+    public static ReadAndWriteLockController getInstance() {
+        return INSTANCE;
     }
-
-    public void setWriteLock(Lock writeLock) {
-        this.writeLock = writeLock;
-    }
-
-    public static ReadAndWriteLockController getInstance(){return INSTANCE;}
 
 }
